@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'launch', //first page launched
     pathMatch: 'full',
   },
   {
@@ -15,7 +15,11 @@ export const routes: Routes = [
     loadComponent: () => import('./watchlist/watchlist.page').then( m => m.WatchlistPage)
   },
   {
-    path: 'details',
+    path: 'details/:id',
     loadComponent: () => import('./details/details.page').then( m => m.DetailsPage)
+  },
+  {
+    path: 'launch',
+    loadComponent: () => import('./launch/launch.page').then( m => m.LaunchPage)
   },
 ];

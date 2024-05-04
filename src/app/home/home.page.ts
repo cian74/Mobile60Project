@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle,IonBadge, IonContent, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonInfiniteScroll } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle,IonBadge, IonContent, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonInfiniteScroll, IonButtons, IonButton, IonBackButton } from '@ionic/angular/standalone';
 import { ApiService } from '../services/api.service';
 import { catchError, finalize, map } from 'rxjs';
 import { MovieResult } from '../services/interfaces';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonInfiniteScroll, 
+  imports: [IonBackButton, IonButton, IonButtons, IonInfiniteScroll, 
     IonLabel,
     IonAlert,
     IonAvatar, 
@@ -40,6 +40,7 @@ export class HomePage {
   private currentPage = 1;
   public dummyArray = new Array(5);
   public imageBaseUrl = 'https://image.tmdb.org/t/p';
+  public vote_average: any;
 
   constructor() {
     this.loadMovies();
@@ -70,7 +71,6 @@ export class HomePage {
         if(event) {
           event.target.disabled = res.total_pages === this.currentPage;;
         }
-        
       }
      });
   }
