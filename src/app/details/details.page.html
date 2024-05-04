@@ -47,8 +47,15 @@
       </ion-card-content>
   </ion-card>
  }
+ <!--Taken from ionic docs-->
  <ion-card>
-
-   <ion-button expand="full" color="light" (click)="addToWatchlist()">Add to watchlist</ion-button>
+   <ion-button expand="full" color="dark" (click)="addToWatchlist()">Add to watchlist</ion-button>
+   <ion-alert
+  header="Movie Already in Watchlist"
+  message="This movie is already in your watchlist."
+  [buttons]="dismissButton"
+  [isOpen]="showAlert"
+  (didDismiss)="alertDismiss()"
+></ion-alert>
  </ion-card>
 </ion-content>

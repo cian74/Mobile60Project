@@ -5,7 +5,6 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonIcon, IonButton, IonLis
 import { addIcons } from 'ionicons';
 import { videocam } from 'ionicons/icons';
 import { RouterLinkWithHref } from '@angular/router';
-import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-launch',

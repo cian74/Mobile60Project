@@ -29,6 +29,12 @@ export class WatchlistPage implements OnInit{
       this.watchlist = savedWatchlist || [];
     }
 
+    async removeFromWatchlist(movieId: number, event: MouseEvent) {
+      event.stopImmediatePropagation(); // Prevents triggering goToDetailsPage
+      this.watchlist = this.watchlist.filter(movie => movie.id !== movieId);
+      await this.storage.set('watchlist', this.watchlist);
+    }
+
     goToDetailsPage(id: number) {
       this.router.navigateByUrl(`/details/${id}`);
     }
