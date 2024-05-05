@@ -16,6 +16,7 @@ import { RouterLinkWithHref } from '@angular/router';
 export class LaunchPage implements OnInit {
 
   constructor() {
+    //adds icons from ionicons library
     addIcons({
       videocam
     })

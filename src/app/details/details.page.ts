@@ -16,21 +16,34 @@ import { Storage } from '@ionic/storage-angular';
   imports: [IonAlert, IonButton, IonIcon, IonItem, IonLabel, IonCardContent, IonText, IonCardSubtitle, IonCardTitle, IonCardHeader, IonCard, IonBackButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule],
 })
 export class DetailsPage implements OnInit {
-  public movieService = inject(ApiService);
+  public movieService = inject(ApiService);//Injects Apiservice depandency
   public imageBaseUrl = 'https://image.tmdb.org/t/p';
-  public movie: WritableSignal<MovieResult | null> = signal(null);
-  showAlert = false;
-  dismissButton = ['OK']; // button for when the alert pops up
+  public movie: WritableSignal<MovieResult | null> = signal(null); //Signal that holds the currently selecred movie
+  showAlert = false; //Alert variable set to control when to show alert 
+  dismissButton = ['OK']; // Button for when the alert pops up
 
+  /**
+   * Setter method for the 'id' input
+   * when a new movieId value is passed in it retrieves movie details
+   * based on the movie id. It subscribes to 'getMovieDetails' which is
+   * a method of movieService, this executes the observable and retrieves
+   * the movie details. The details are then set to the signal 'movie'
+   * 
+   * @param movieId - identifier of the movies for which the details need to be retrieved. 
+   * 
+   */
   @Input()
   set id(movieId: string) {
-    this.movieService.getMovieDetails(movieId).subscribe((movie) => {
+    //retrieves movie detials from api based on id
+    this.movieService.getMovieDetails(movieId).subscribe((movie) => { //subscribe executes observable
       console.log(movie);
+      //sets movie details to signal
       this.movie.set(movie);
     });
   }  
 
   constructor(private storage: Storage) { 
+    //function that adds icons from ionicons library
     addIcons({
       cashOutline,
       calendarOutline,
@@ -42,9 +55,16 @@ export class DetailsPage implements OnInit {
   }
 
   async createStorage() {
+    //initialises storage for component
     await this.storage.create();
   }
 
+  /**
+   * Asynchronously adds the current movie to the watchlist to storage.
+   * If the current movie is not already in the watchlist, Its added and
+   * saved to storage. If the current movie is already in the watchlist,
+   * an alert is shown and it wont be added
+   */
   async addToWatchlist() {
     const currentMovie = this.movie();
     if (currentMovie) {
@@ -59,7 +79,7 @@ export class DetailsPage implements OnInit {
       // Add current movie to watchlist
       watchlist.push(currentMovie);
 
-      //save
+      //save to storage
       await this.storage.set('watchlist', watchlist);
       } else {
         this.showAlert = true;
@@ -68,6 +88,7 @@ export class DetailsPage implements OnInit {
     }
   }
 
+  //called when dismiss button is pressed
   alertDismiss() {
     this.showAlert = false;
   }

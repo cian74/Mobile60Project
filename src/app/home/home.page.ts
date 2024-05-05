@@ -46,14 +46,21 @@ export class HomePage {
     this.loadMovies();
   }
 
+  /**
+   * Loads the top rated movies from the movie service.
+   * @param event - Optional parameter representing the InfiniteScrollCustomEvent triggered by the infinite scroll component.
+   */
   loadMovies(event?: InfiniteScrollCustomEvent) {
     this.error = null;
 
+    //sets isLoading to true when the page is initially loaded
     if(!event) {
       this.isLoading = true;
     }
+    //gets top rated movies which is in the movie service
      this.movieService.getTopRatedMovies(this.currentPage).pipe(
-      finalize(() => {
+      finalize(() => { // finalizes observable.- completes scroll event
+        //stops the scroll event
         this.isLoading = false;
         if(event) {
           event.target.complete();
@@ -65,6 +72,10 @@ export class HomePage {
         return [];
       })
      ).subscribe({
+      /**
+       * Handles the next value emitted by the observable.
+       * @param res - The response containing the top rated movies.
+       */
       next: (res) => {
         console.log(res);
         this.movies.push(...res.results);
@@ -75,6 +86,12 @@ export class HomePage {
      });
   }
 
+  /**
+ * Loads more movies when the user scrolls to the bottom of the page.
+ * Increases the current page number and calls the loadMovies method to fetch more movies.
+ * @param event - Optional parameter representing the InfiniteScrollCustomEvent triggered by the infinite scroll component.
+ *                It allows the method to access the event properties, such as target and disabled.
+ */
   loadMore(event: InfiniteScrollCustomEvent) {
     this.currentPage++;
     this.loadMovies(event);
