@@ -19,7 +19,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "lodash"
+              "localforage"
             ],
             "outputPath": "www",
             "index": "src/index.html",

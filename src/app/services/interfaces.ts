@@ -31,6 +31,8 @@ export interface MovieResult {
     video: boolean;
     vote_average: number;
     vote_count: number;
+    rating?: number;
+    user_rating: number;
   }
 
   interface Genre {

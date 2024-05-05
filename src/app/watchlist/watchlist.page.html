@@ -10,9 +10,15 @@
 <ion-content [fullscreen]="true">
   <ion-list>
     <ion-item *ngFor="let movie of watchlist" (click)="goToDetailsPage(movie.id)">
+      <ion-avatar slot="end">
+        <img [src]="imageBaseUrl + '/w92' + movie.poster_path" alt="poster" />
+      </ion-avatar>
       <ion-label>{{ movie.title }}</ion-label>
       <ion-button slot="end" color="danger" (click)="removeFromWatchlist(movie.id, $event)">
         Remove
+      </ion-button>
+      <ion-button style="min-width: 55px;" color="success" slot="end" (click)="rateMovie(movie)">
+        {{ movie.rating ? movie.rating + '/10' : 'Rate'}}
       </ion-button>
     </ion-item>
   </ion-list>
