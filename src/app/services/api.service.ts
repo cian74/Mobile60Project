@@ -33,4 +33,8 @@ export class ApiService {
   getMovieDetails(id: string): Observable<MovieResult> {
     return this.http.get<MovieResult>(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
   }
+
+  searchMovies(searchTerm: string): Observable<ApiResult> {
+    return this.http.get<ApiResult>(`${BASE_URL}/search/movie?query=${searchTerm}&api_key=${API_KEY}`);
+  }
 }

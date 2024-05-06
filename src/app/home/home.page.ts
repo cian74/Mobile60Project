@@ -117,13 +117,23 @@ export class HomePage {
   searchMovies(event: CustomEvent) {
     const searchTerm = event.detail.value.toLowerCase();
     if (searchTerm.trim() !== '') {
-      // Filter movies that match the search term and take the first three results
-      this.filteredMovies = this.movies.filter((m) =>
-        m.title.toLowerCase().indexOf(searchTerm) > -1
-      ).slice(0, 3); // Adjust the number here to change the limit
+      // Extracting ids from filteredMovies array
+      const movieIds = this.filteredMovies.map(movie => movie.id);
+      this.movieService.searchMovies(searchTerm).pipe(
+        catchError((err: any) => {
+          console.log(err);
+          this.error = err.error.status_message;
+          return [];
+        })
+      ).subscribe({
+        next: (res) => {
+          this.filteredMovies = res.results.slice(0, 3);
+        }
+      });
     } else {
-      // If the search term is empty, do not display any movies
       this.filteredMovies = [];
+      this.searchTerm = '';
+      this.loadMovies();
     }
   }
 }

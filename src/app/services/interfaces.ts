@@ -33,6 +33,7 @@ export interface MovieResult {
     vote_count: number;
     rating?: number;
     user_rating: number;
+    results: any;
   }
 
   interface Genre {
