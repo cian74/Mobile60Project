@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonBackButton,IonButtons, IonItem, IonList,IonLabel, IonAvatar, IonSelect, IonSelectOption, IonAlert, IonInput } from '@ionic/angular/standalone';
@@ -6,6 +6,8 @@ import { MovieResult } from '../services/interfaces';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular'
+import { Keyboard } from '@capacitor/keyboard';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-watchlist',
@@ -94,6 +96,9 @@ export class WatchlistPage implements OnInit{
         movie.rating = rating;
         // Save rating to storage
         await this.storage.set(`rating_${movie.id}`, rating);
+        if (Capacitor.isNativePlatform()) {
+          Keyboard.show();
+        }
       }
     }
   
@@ -150,7 +155,6 @@ export class WatchlistPage implements OnInit{
         buttons: ['OK']
       });
   
-      await alert.present();
     }
     
 }

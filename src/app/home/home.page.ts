@@ -46,6 +46,7 @@ export class HomePage {
 
   constructor() {
     this.loadMovies();
+
   }
 
   /**

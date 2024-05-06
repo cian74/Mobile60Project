@@ -1,19 +1,58 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="ion-text-center">
-    <ion-title>
-      FilmFinder
-      <ion-icon name="videocam" ></ion-icon>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      My Movies
+      <ion-icon name="aperture-outline"></ion-icon>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-text-center ion-padding" scrollY="false">
+<ion-content class="ion-padding" scrollY="false">
   <div class="ion-text-center" style="display: flex; flex-direction: column; align-items: center;">
-    <ion-button [routerLink]="['/home']" size="large" color="light" class="ion-padding-top" style="width: 200px; margin-bottom: 10px;">
-      MovieList
+    <ion-button [routerLink]="['/home']" size="large" color="light" style="width: 200px; margin-bottom: 10px;">
+      Movie List 
+      <ion-icon name="videocam-outline"></ion-icon>
     </ion-button>
-    <ion-button [routerLink]="['/watchlist']" size="large" color="light" class="ion-padding-top" style="width: 200px;">
-      WatchList
+    <ion-button [routerLink]="['/watchlist']" size="large" color="light" style="width: 200px;">
+      Watch List 
+      <ion-icon name="file-Tray-Outline"></ion-icon>
     </ion-button>
   </div>
+
+  <ion-card color="light">
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Welcome to My Movies App</ion-card-title>
+      <ion-card-subtitle>created by cian barrett</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list color="light">
+        <ion-item color="light">
+          <ion-label>My Movies is a platfrom that lets you discover
+                    and manage your favourite movies.
+          </ion-label>
+        </ion-item>
+        <ion-item color="light">
+          <ion-label>Perfect for movie enthusiasts or for the person
+            just looking for something new to watch.
+          </ion-label>
+        </ion-item>
+        <ion-item color="light">
+          <ion-label>The app utilises <a href="https://developer.themoviedb.org/reference/intro/getting-started">themoviedb</a> api for gathering data.
+          </ion-label>
+        </ion-item>
+        <ion-item color="light">
+          <ion-label>Read up on your favourite movies, add new movies to your watchlist
+            ,rate recently watched movies, or simply just browse.
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-icon name="logo-ionic"></ion-icon>
+    <ion-label class="ion-text-left"> created using ionic</ion-label>
+  </ion-toolbar>
+</ion-footer>
