@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle,IonBadge, IonContent, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonInfiniteScroll, IonButtons, IonButton, IonBackButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle,IonBadge, IonContent, IonInfiniteScrollContent, InfiniteScrollCustomEvent, IonList, IonItem, IonAvatar, IonSkeletonText, IonAlert, IonLabel, IonInfiniteScroll, IonButtons, IonButton, IonBackButton, IonSearchbar } from '@ionic/angular/standalone';
 import { ApiService } from '../services/api.service';
-import { catchError, finalize, map } from 'rxjs';
+import { catchError, finalize } from 'rxjs';
 import { MovieResult } from '../services/interfaces';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonBackButton, IonButton, IonButtons, IonInfiniteScroll, 
+  imports: [IonSearchbar, IonBackButton, IonButton, IonButtons, IonInfiniteScroll, 
     IonLabel,
     IonAlert,
     IonAvatar, 
@@ -41,6 +41,8 @@ export class HomePage {
   public dummyArray = new Array(5);
   public imageBaseUrl = 'https://image.tmdb.org/t/p';
   public vote_average: any;
+  public searchTerm: string = '';
+  public filteredMovies: MovieResult[] = [];
 
   constructor() {
     this.loadMovies();
@@ -79,6 +81,13 @@ export class HomePage {
       next: (res) => {
         console.log(res);
         this.movies.push(...res.results);
+        if (this.searchTerm.trim() !== '') {
+          this.filteredMovies = this.movies.filter((movie) =>
+            movie.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+          ).slice(0, 3);// only displays 3 filtered movies
+        } else {
+          this.filteredMovies = [...this.movies];
+        }
         if(event) {
           event.target.disabled = res.total_pages === this.currentPage;;
         }
@@ -95,5 +104,26 @@ export class HomePage {
   loadMore(event: InfiniteScrollCustomEvent) {
     this.currentPage++;
     this.loadMovies(event);
+  }
+
+  /**
+ * Filters the movies based on the search term and updates the filteredMovies array.
+ * If the search term is not empty, it filters the movies that match the search term and takes the first three results.
+ * If the search term is empty, it clears the filteredMovies array.
+ * @param event - The CustomEvent containing the search term in the detail.value property.
+ */
+
+  //NOTE: -  track filteredMovies instead of 'movies' html as tracking movies causes them to be loaded twice
+  searchMovies(event: CustomEvent) {
+    const searchTerm = event.detail.value.toLowerCase();
+    if (searchTerm.trim() !== '') {
+      // Filter movies that match the search term and take the first three results
+      this.filteredMovies = this.movies.filter((m) =>
+        m.title.toLowerCase().indexOf(searchTerm) > -1
+      ).slice(0, 3); // Adjust the number here to change the limit
+    } else {
+      // If the search term is empty, do not display any movies
+      this.filteredMovies = [];
+    }
   }
 }

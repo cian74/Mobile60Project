@@ -14,6 +14,7 @@
         <img [src]="imageBaseUrl + '/w92' + movie.poster_path" alt="poster" />
       </ion-avatar>
       <ion-label>{{ movie.title }}</ion-label>
+      
       <ion-button slot="end" color="danger" (click)="removeFromWatchlist(movie.id, $event)">
         Remove
       </ion-button>

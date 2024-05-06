@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonBackButton,IonButtons, IonItem, IonList,IonLabel, IonAvatar, IonSelect, IonSelectOption, IonAlert } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton,IonBackButton,IonButtons, IonItem, IonList,IonLabel, IonAvatar, IonSelect, IonSelectOption, IonAlert, IonInput } from '@ionic/angular/standalone';
 import { MovieResult } from '../services/interfaces';
 import { Storage } from '@ionic/storage-angular';
 import { Router } from '@angular/router';
-import { text } from 'ionicons/icons';
+import { AlertController } from '@ionic/angular'
 
 @Component({
   selector: 'app-watchlist',
   templateUrl: './watchlist.page.html',
   styleUrls: ['./watchlist.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonAvatar, IonItem, IonContent, IonHeader, IonTitle, IonAvatar, IonToolbar, CommonModule, FormsModule,IonBackButton,IonButton,IonButtons,IonList,IonLabel,IonSelect,IonSelectOption]
+  imports: [IonInput, IonAlert, IonAvatar, IonItem, IonContent, IonHeader, IonTitle, IonAvatar, IonToolbar, CommonModule, FormsModule,IonBackButton,IonButton,IonButtons,IonList,IonLabel,IonSelect,IonSelectOption]
 })
 export class WatchlistPage implements OnInit{
     public watchlist: MovieResult[] = [];
     public imageBaseUrl = 'https://image.tmdb.org/t/p';
     public selectedMovie: MovieResult | null = null;
 
-    constructor(private storage: Storage, private router: Router) {}
+    constructor(private storage: Storage, private router: Router, private alertCtrl: AlertController) {}
   
     //loads the watchlist
     ngOnInit() {
@@ -103,20 +103,54 @@ export class WatchlistPage implements OnInit{
      * @returns {Promise<number | null>} - A Promise that resolves with the user-provided rating (if valid) or null if the prompt is canceled or an invalid rating is entered.
      */
     async showRatingPrompt(): Promise<number | null> {
-      return new Promise<number | null>((resolve) => {
-        const rating = prompt('Rate this movie from 1 to 10:');
-        if (rating === null || rating.trim() === '') {
-          resolve(null);
-        } else {
-          const parsedRating = parseInt(rating.trim(), 10);
-          if (isNaN(parsedRating) || parsedRating < 1 || parsedRating > 10) {
-            alert('Please enter a valid rating between 1 and 10.');
-            resolve(null);
-          } else {
-            resolve(parsedRating);
-          }
-        }
+      return new Promise<number | null>(async (resolve) => {
+        const alert = await this.alertCtrl.create({
+          header: 'Rate this movie',
+          inputs: [
+            {
+              name: 'rating',
+              type: 'number',
+              min: 1,
+              max: 10,
+              placeholder: 'Enter rating (1-10)'
+            }
+          ],
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                resolve(null);
+              }
+            },
+            {
+              text: 'Rate',
+              handler: (data: { rating: string }) => {
+                const parsedRating = parseInt(data.rating, 10);
+                if (isNaN(parsedRating) || parsedRating < 1 || parsedRating > 10) {
+                  // Show an error message if the rating is invalid
+                  this.showInvalidRatingAlert();
+                  resolve(null);
+                } else {
+                  resolve(parsedRating);
+                }
+              }
+            }
+          ]
+        });
+  
+        await alert.present();
       });
+    }
+  
+    async showInvalidRatingAlert() {
+      const alert = await this.alertCtrl.create({
+        header: 'Invalid Rating',
+        message: 'Please enter a valid rating between 1 and 10.',
+        buttons: ['OK']
+      });
+  
+      await alert.present();
     }
     
 }
