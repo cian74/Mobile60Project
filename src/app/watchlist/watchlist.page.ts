@@ -68,7 +68,9 @@ export class WatchlistPage implements OnInit{
      */
     async removeFromWatchlist(movieId: number, event: MouseEvent) {
       event.stopImmediatePropagation(); // Prevents triggering goToDetailsPage
+      //Filter out movie to be removed
       this.watchlist = this.watchlist.filter(movie => movie.id !== movieId);
+      //Update watchlst in storage
       await this.storage.set('watchlist', this.watchlist);
     }
 
@@ -91,11 +93,13 @@ export class WatchlistPage implements OnInit{
      * @returns {Promise<void>} - A Promise that resolves once the user provides a rating and it is saved to the storage.
      */
     async rateMovie(movie: MovieResult) {
+      //shows a prompt for the user to enter a rating
       const rating = await this.showRatingPrompt();
+      //saves the rating in storage if the rating isnt null
       if (rating !== null) {
         movie.rating = rating;
-        // Save rating to storage
         await this.storage.set(`rating_${movie.id}`, rating);
+        //shows a keyboard if the user is using an android or ios device.
         if (Capacitor.isNativePlatform()) {
           Keyboard.show();
         }
