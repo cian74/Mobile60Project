@@ -81,15 +81,20 @@ export class HomePage {
        */
       next: (res) => {
         console.log(res);
+        //pushes api results to movies array
         this.movies.push(...res.results);
+        //filters the movies if a search is made.
         if (this.searchTerm.trim() !== '') {
           this.filteredMovies = this.movies.filter((movie) =>
-            movie.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+            movie.title.toLowerCase().includes(this.searchTerm.toLowerCase()) //makes it case insensitive
           ).slice(0, 3);// only displays 3 filtered movies
         } else {
-          this.filteredMovies = [...this.movies];
+          this.filteredMovies = [...this.movies]; //movies fetched from api remain intact.
+                                                  //however filteredMovies still has the whole list of movies.
         }
         if(event) {
+          //if the total pages = the current page disable the scroll event.
+          //stops the scroll from looping.
           event.target.disabled = res.total_pages === this.currentPage;;
         }
       }
@@ -116,22 +121,28 @@ export class HomePage {
 
   //NOTE: -  track filteredMovies instead of 'movies' html as tracking movies causes them to be loaded twice
   searchMovies(event: CustomEvent) {
+    //saves search entered by user to searchTerm and converts to lowercase
     const searchTerm = event.detail.value.toLowerCase();
     if (searchTerm.trim() !== '') {
       // Extracting ids from filteredMovies array
       const movieIds = this.filteredMovies.map(movie => movie.id);
+      //calls search function from movieService
       this.movieService.searchMovies(searchTerm).pipe(
+        //handles errors if it cant contact api.
         catchError((err: any) => {
           console.log(err);
           this.error = err.error.status_message;
           return [];
         })
       ).subscribe({
+        //handles result fetched from observable.
         next: (res) => {
+          // saves 3 resulst to the filteredMovies array
           this.filteredMovies = res.results.slice(0, 3);
         }
       });
     } else {
+      //updates all variables if nothing is entered.
       this.filteredMovies = [];
       this.searchTerm = '';
       this.loadMovies();
